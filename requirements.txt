@@ -1,0 +1,29 @@
+# Web framework
+fastapi
+uvicorn[standard]
+
+# Database
+sqlalchemy
+psycopg2-binary
+alembic
+
+# Queue
+rq
+redis
+
+# HTTP client
+httpx
+
+# Validation
+pydantic
+pydantic-settings
+email-validator
+
+# Observability
+prometheus-fastapi-instrumentator
+prometheus-client
+
+# Testing
+pytest
+pytest-asyncio
+httpx

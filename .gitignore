@@ -1,0 +1,19 @@
+# Environment files — never commit secrets
+.env
+.env.local
+.env.production
+.env.staging
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+
+# Docker
+*.log
+
+# OS
+.DS_Store
