@@ -2,7 +2,11 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [phase-5]
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 env:
   DOCKER_IMAGE: vimukthirandunu/webhook-delivery-system
@@ -68,7 +72,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/webhook-delivery-system
-            git pull origin phase-5
+            git pull origin phase-6
+            bash scripts/fetch-secrets.sh
             IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml pull
             IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml up -d
             sleep 10
@@ -87,6 +92,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/webhook-delivery-system
+            git pull origin main
+            bash scripts/fetch-secrets.sh
             IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml pull
             IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml up -d
             sleep 10
