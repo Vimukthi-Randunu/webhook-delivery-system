@@ -1,0 +1,49 @@
+# The Headless Service — gives Redis Pods stable DNS names
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  namespace: default
+spec:
+  clusterIP: None          # This is what makes it headless — no virtual IP
+  selector:
+    app: redis             # Routes to any Pod with this label
+  ports:
+    - port: 6379
+      targetPort: 6379
+
+---
+# The StatefulSet itself
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis
+  namespace: default
+spec:
+  serviceName: redis-service   # Must match the Headless Service name above
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis               # StatefulSet manages Pods with this label
+  template:
+    metadata:
+      labels:
+        app: redis             # Pods get this label — must match matchLabels
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-data
+              mountPath: /data  # Where Redis writes its data inside the container
+  volumeClaimTemplates:
+    - metadata:
+        name: redis-data        # Must match volumeMounts name above
+      spec:
+        accessModes:
+          - ReadWriteOnce       # One node can mount this volume at a time
+        resources:
+          requests:
+            storage: 1Gi        # How much disk to claim

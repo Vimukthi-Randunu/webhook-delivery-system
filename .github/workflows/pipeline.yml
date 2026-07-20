@@ -3,10 +3,10 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main
+      - k8s-deployment
   pull_request:
     branches:
-      - main
+      - k8s-deployment
 
 env:
   DOCKER_IMAGE: vimukthirandunu/webhook-delivery-system
@@ -59,42 +59,31 @@ jobs:
           push: true
           tags: ${{ env.DOCKER_IMAGE }}:${{ steps.sha.outputs.sha }}
 
-  deploy-staging:
+  deploy:
     needs: build
-    runs-on: ubuntu-latest
-    environment: staging
-    steps:
-      - name: Deploy to staging
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          script: |
-            cd ~/webhook-delivery-system
-            git pull origin phase-6
-            bash scripts/fetch-secrets.sh
-            IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml pull
-            IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml up -d
-            sleep 10
-            curl -f http://localhost:8000/health
-
-  deploy-production:
-    needs: deploy-staging
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Deploy to production
+      - name: Copy fresh manifests to Instance 1
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: "k8s/*"
+          target: "~/manifests"
+          strip_components: 1
+
+      - name: Substitute image tag and deploy
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            cd ~/webhook-delivery-system
-            git pull origin main
-            bash scripts/fetch-secrets.sh
-            IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml pull
-            IMAGE_TAG=${{ needs.build.outputs.image_tag }} docker compose -f docker-compose.instance1.yml up -d
-            sleep 10
-            curl -f http://localhost:8000/health
+            cd ~/manifests
+            sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" api.yaml
+            sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" worker.yaml
+            sudo kubectl apply -f .
+            sudo kubectl rollout status deployment/api --timeout=60s
+            sudo kubectl rollout status deployment/worker --timeout=60s
