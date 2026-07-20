@@ -84,10 +84,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/manifests
-            # sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" api.yaml
-            # sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" worker.yaml
-            sed -i "s/IMAGE_TAG_PLACEHOLDER/doesnotexist999/" api.yaml
-            sed -i "s/IMAGE_TAG_PLACEHOLDER/doesnotexist999/" worker.yaml
+            sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" api.yaml
+            sed -i "s/IMAGE_TAG_PLACEHOLDER/${{ needs.build.outputs.image_tag }}/" worker.yaml
             sudo kubectl apply -f .
             sudo kubectl rollout status deployment/api --timeout=60s
             sudo kubectl rollout status deployment/worker --timeout=60s
