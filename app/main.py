@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy import text
 from redis import Redis
 from rq import Queue, Retry
 from app.database import engine, Base, get_db
@@ -29,6 +30,14 @@ REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+@app.get("/health/ready")
+def readiness(db: Session = Depends(get_db)):
+    try:
+        db.execute(text("SELECT 1"))
+        return {"status": "ready"}
+    except Exception:
+        raise HTTPException(status_code=503, detail="Database not reachable")
 
 
 @app.post("/events", response_model=EventResponse)
