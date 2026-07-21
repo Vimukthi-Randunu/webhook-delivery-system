@@ -18,6 +18,13 @@ spec:
           image: vimukthirandunu/webhook-delivery-system:IMAGE_TAG_PLACEHOLDER
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              memory: "12"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "250m"
           env:
             - name: REDIS_URL
               value: "redis://redis-service:6379"
