@@ -1,0 +1,35 @@
+# EEI6373 Performance Modelling Mini Project
+
+This branch contains the supporting materials for the EEI6373 Performance
+Modelling mini project based on the Webhook Delivery System.
+
+## Study
+
+The study evaluates the performance of the webhook delivery system under
+increasing workload and different worker configurations.
+
+The performance model focuses on the queue and worker-processing path:
+
+Incoming Webhook Events → Redis/RQ Queue → RQ Workers → Target Webhook
+
+## Dataset
+
+The dataset was generated using a controlled discrete-event simulation.
+
+The simulation records:
+
+- Arrival rate
+- Number of workers
+- Processing latency
+- Throughput
+- Mean queue length
+- Worker utilization
+
+The dataset contains simulation results and is not presented as production
+measurements from the deployed Project 9 system.
+
+## Experiments
+
+1. Increasing workload with one worker
+2. Increasing the number of workers at a fixed workload
+3. Increasing workload and worker capacity together
