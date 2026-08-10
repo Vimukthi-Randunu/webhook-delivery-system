@@ -1,0 +1,17 @@
+experiment,arrival_rate,workers,rho,theoretical_queue_length,theoretical_waiting_s,theoretical_latency_s,stable
+Experiment 1 - Increasing Workload,2,1,0.2,0.05,0.025,0.125,True
+Experiment 1 - Increasing Workload,4,1,0.4,0.26666666666666666,0.06666666666666667,0.16666666666666669,True
+Experiment 1 - Increasing Workload,6,1,0.6,0.8999999999999998,0.14999999999999997,0.24999999999999997,True
+Experiment 1 - Increasing Workload,8,1,0.8,3.200000000000001,0.40000000000000013,0.5000000000000001,True
+Experiment 1 - Increasing Workload,9,1,0.9,8.100000000000003,0.9000000000000004,1.0000000000000004,True
+Experiment 1 - Increasing Workload,10,1,1.0,inf,inf,inf,False
+Experiment 1 - Increasing Workload,11,1,1.1,inf,inf,inf,False
+Experiment 1 - Increasing Workload,12,1,1.2,inf,inf,inf,False
+Experiment 2 - Increasing Workers,8,1,0.8,3.200000000000001,0.40000000000000013,0.5000000000000001,True
+Experiment 2 - Increasing Workers,8,2,0.4,0.1523809523809524,0.01904761904761905,0.11904761904761905,True
+Experiment 2 - Increasing Workers,8,3,0.26666666666666666,0.01892091648189209,0.0023651145602365115,0.10236511456023652,True
+Experiment 2 - Increasing Workers,8,4,0.2,0.0023952095808383233,0.0002994011976047904,0.10029940119760479,True
+Experiment 3 - Scaling With Workload,8,1,0.8,3.200000000000001,0.40000000000000013,0.5000000000000001,True
+Experiment 3 - Scaling With Workload,16,2,0.8,2.8444444444444454,0.17777777777777784,0.27777777777777785,True
+Experiment 3 - Scaling With Workload,24,3,0.8,2.588764044943821,0.10786516853932587,0.20786516853932588,True
+Experiment 3 - Scaling With Workload,32,4,0.8,2.3857298871496186,0.07455405897342558,0.17455405897342557,True

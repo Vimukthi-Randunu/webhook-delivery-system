@@ -1,0 +1,9 @@
+parameter,value
+Model,M/M/c queue + discrete-event simulation
+Service rate (μ),10 events/s per worker (assumed)
+Workers,1–4
+Experiment 1,"1 worker; λ = 2, 4, 6, 8, 9, 10, 11, 12 events/s"
+Experiment 2,λ = 8 events/s; 1–4 workers
+Experiment 3,"(λ,c) = (8,1), (16,2), (24,3), (32,4)"
+Simulation,1000 s per replication; 100 s warm-up; 5 replications
+Dataset,Simulated; not production measurements
